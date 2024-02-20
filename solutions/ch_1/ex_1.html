@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home • Statistical Reinforcement Learning</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/stylesheets/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Chapter 1 • Exercise 1</h1>
+    <h3>Part 1</h3>
+    By law of iterative expectation
+    \begin{align}
+    \mathbb{E}\left[Z_i(f)\right] &= \mathbb{E}\left[\mathbb{E}\left[Z_i(f) \mid x_i\right]\right] \\
+    &= \mathbb{E}\left[\mathbb{E}\left[f(x_i)^2 - f^*(x_i)^2 - 2 y f(x_i) + 2 y f^*(x_i) \mid x_i\right]\right] \\
+    &= \mathbb{E}\left[\mathbb{E}\left[f(x_i)^2 - f^*(x_i)^2 - 2 f^*(x_i) f(x_i) + 2 f^*(x_i) f^*(x_i)\right]\right] \\
+    &= \mathbb{E}\left[\mathbb{E}\left[\left(f(x_i) - f^*(x_i)\right)^2 \mid x_i\right]\right] \\
+    &= \mathbb{E}\left[\left(f(x_i) - f^*(x_i)\right)^2\right]
+    \end{align}
+
+    <h3>Part 2</h3>
+    We have
+    \begin{align}
+    \mathrm{var}\left[Z_i\right] &\leq \mathbb{E}\left[Z_i^2\right] \\
+    &\leq \mathbb{E}\left[\left((f(x_i) - f^*(x_i))( f(x_i) + f^*(x_i) - 2 y)\right)^2\right] \\
+    &\leq 4\mathbb{E}\left[\left(f(x_i) - f^*(x_i)\right)^2\right]
+    \end{align}
+
+    Here we use the fact that all \(f(x), f^*(x), y \in [0, 1]\)
+    
+    <h3>Part 3</h3>
+
+    We apply Bernstein's inequality on \(-Z_i\). Note that \(|\mathbb{E}[Z_i] - Z_i| \leq 1\). Hence with probability at least \(1-\delta\), we have
+    \begin{align}
+    \frac{1}{T} \sum_{i=1}^T \left(\mathbb{E}[Z_i] - Z_i\right) &\leq \sigma^2 \sqrt{\frac{2 \log {1 / \delta}}{T}} + \frac{\log{1 / \delta}}{3T} \\
+    &\leq \frac{\sigma^2}{8} + \frac{4\log(1 / \delta)}{T} + \frac{\log 1/\delta}{3T} \\
+    &= \frac{1}{2} \mathcal{E} + \frac{13}{3} \frac{\log(1 / \delta)}{T}
+    \end{align}
+
+    Note here we used AM_GM in step 2. Finally, since \(\frac{1}{T} \sum_{i=1}^{T} Z_i = L(f) - L(f^*)\), we have that with probability at least \((1 - \delta)\)
+
+    \begin{align}
+    \mathcal{E} - (L(f) - L(f^*)) \leq \frac{1}{2} \mathcal{E} + \frac{13}{3}\frac{\log(1/\delta)}{T} \\
+    \mathcal{E} \leq 2(L(f) - L(f^*)) + C\frac{\log(1 / \delta)}{T}
+    \end{align}
+
+    where \(C = 26/3\).
+
+    <h3>Part 4</h3>
+    
+    By union bound, we have with probability at least \(1 - |\mathcal{F}|\delta\),
+
+    \begin{align}
+    \forall f \in \mathcal{F}, \ \mathcal{E}(f) \leq 2 (\hat{L}(f) - \hat{L}(f^*)) + \frac{C \log (1 / \delta)}{T}
+    \end{align}
+
+    Setting \(\delta = \delta / |\mathcal{F}|\), we have that with probability at least \(1 - \delta\)
+
+    \begin{align}
+    \forall f \in \mathcal{F}, \ \mathcal{E}(f) \leq 2 (\hat{L}(f) - \hat{L}(f^*)) + \frac{C \log (|\mathcal{F}| / \delta)}{T}
+    \end{align}
+
+    In particular, we must have that with probability at least \(1 - \delta\):
+
+    \begin{align}
+    \mathcal{E}(\hat{f}) \leq \frac{C \log (|\mathcal{F}| / \delta)}{T}
+    \end{align}
+    
+    as desired.
+
+    <br><br><a href="/">Return home</a>
+  </div>
+</body>
+</html>
