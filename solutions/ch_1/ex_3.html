@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 3 • Statistical Reinforcement Learning</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/stylesheets/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Chapter 1 • Exercise 3</h1>
+    <h3>Part 1</h3>
+    We directly have
+    \begin{align}
+        \ln \mathbb{E} \exp \{- \eta (X - \mathbb{E}[X])\} &\leq \mathbb{E} \exp \{- \eta (X - \mathbb{E}[X])\} - 1 \\
+        &\leq \mathbb{E} \left\{1 - \eta (X - \mathbb{E}[X]) + \frac{\eta^2}{2} (X - \mathbb{E}[X])^2  \right\} - 1 \\
+        &= \frac{\eta^2}{2}\left(\mathbb{E}[X^2] - \mathbb{E}[X]^2\right) \\
+        &\leq \frac{\eta^2}{2}\mathbb{E}[X^2]
+    \end{align}
+    as desired.
+
+    <h3>Part 2</h3>
+    Rearranging gives us
+    \begin{align}
+        \eta \mathbb{E}[X] \leq - \ln \mathbb{E} \exp\{- \eta X\} + \frac{\eta^2}{2} \mathbb{E}[X^2]
+    \end{align}
+    Hence
+    \begin{align}
+        \eta \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)] &\leq - \ln \mathbb{E}_{\hat{f}^t \sim q^{t} } \exp\{- \eta l(\hat{f}^t(x), y)\} + \frac{\eta^2}{2} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)^2] \\
+        &= - \ln \sum_{f \in \mathcal{F}} e^{- \eta l(f(x), y)} \frac{e^{- \sum_{i=1}^{t-1} l(f(x), y)}}{\sum_{f' \in \mathcal{F}} e^{- \sum_{i=1}^{t-1} l(f(x), y)}} + \frac{\eta^2}{2} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)^2] \\
+        &= \Phi_{\eta}^{t} - \Phi_{\eta}^{t-1} + \frac{\eta^2}{2} \mathbb{E}_{f \sim q^{t} }[l(f(x), y)^2]
+    \end{align}
+
+    Summing over \(t\), we have
+    \begin{align}
+        \sum_{t=1}^{T} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)] &\leq \frac{1}{\eta} \left(\Phi_{\eta}^{T} - \Phi_{\eta}^{0}\right) + \frac{\eta}{2} \sum_{t=1}^{T} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)^2]
+    \end{align}
+
+    Finally we have both
+    \begin{align}
+        \Phi_{\eta}^0 &= - \ln |\mathcal{F}| \\
+        \Phi_{\eta}^T &\leq \eta \sum_{t=1}^{T} l(f^{\star}(x), y) \quad \forall \ f^{\star} \in \mathcal{F}
+    \end{align}
+
+    Hence for any \(f^{\star} \in \mathcal{F}\), we have
+    \begin{align}
+        \sum_{t=1}^{T} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)] - l(f^{\star}(x), y) \leq  \frac{\eta}{2} \sum_{t=1}^{T} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)^2] + \frac{\log |\mathcal{F}|}{\eta}
+    \end{align}
+    as desired.
+
+    <br><br><a href="/">Return home</a>
+  </div>
+</body>
+</html>
