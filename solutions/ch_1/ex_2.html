@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chapter 1 • Exercise 2 • Statistical Reinforcement Learning</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/stylesheets/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Chapter 1 • Exercise 2</h1>
+    <h3>Part 1</h3>
+    Consider the finite class consisting of the two elements \(\mathcal{F} = \{f_0, f_1\}\) where
+    \begin{align}
+    f_{i}(x) = i \quad \text{for all $x$}
+    \end{align}
+    Now consider the sequnce \((x_i, y_i)\) for \(i = 1, \ldots 2T\) where
+    \begin{align}
+    y_{2k-1} = 0, \ y_{2k} = 1 \quad k = 1, \ldots T
+    \end{align}
+    For the indicator loss \(l(\cdot, \cdot)\), we must have that
+    \begin{align}
+    \min_{f \in \mathcal{F}} \sum_{i=1}^{T} l(f(x_i), y_i) = T
+    \end{align}
+    since both \(f_1\) and \(f_2\) achieve the same loss.
+    Further, one empirical minimizer \(\hat{f^t}\) (since at odd \(t\), \(\hat{f^{t}}\) is not uniquely defined) is given by
+    \begin{align}
+    \hat{f}{^{2k-1}} = f_1, \ \hat{f}{^{2k}} = f_0 \quad k = 1, \ldots T 
+    \end{align}
+    Hence we have
+    \begin{align}
+    \sum_{t=1}^{2T} l(\hat{f}^{t}(x_t), y^t) = 2T
+    \end{align}
+    and thus
+    \begin{align}
+    \sum_{t=1}^{2T} l(\hat{f}^{t}(x_t), y^t) - \min_{f \in \mathcal{F}} \sum_{i=1}^{T} l(f(x_i), y_i) = T = \Omega(2T)
+    \end{align}
+    as desired.
+    <br><br><em>Note here, the choice of \(\hat{f}^{2k-1}\) is sort of arbitrary. However this doesn't really matter. Let \(p\) be the probability we get the next token right. As long as \(p < 1\), on expectation our regret is still \(\Omega(T)\).</em>
+
+    <h3>Part 2</h3>
+
+    <span style="color: blue">Note this solution is not completely solved and only enjoys a bound of \(\sqrt{T \log (T |\mathcal{F})|}\). I am currently working on making this tighter. Also equation in blue is dubious.</span><br><br>
+
+    Firstly, by Hoeffding's inequality, we have that for any fixed \(f\)
+
+    \begin{align}
+      \mathbb{P}\left(\frac{1}{n} \sum_{i=1}^{t-1} l(f(x^{i}), y^i) \geq \mathbb{E}_{(x^t, y^t)}[l(f(x^t), y^t)] - \sqrt{ \frac{1}{2t} \log \left(\frac{1}{\delta}\right) }\right) \geq 1 - \delta
+    \end{align}
+
+    Thus with probability at least \(1 - \delta\), all \(f \in \mathcal{F}\) satisfy
+
+    \begin{align}
+      \mathbb{P}\left(\frac{1}{n} \sum_{i=1}^{t-1} l(f(x^{i}), y^i) \geq \mathbb{E}_{(x^t, y^t)}[l(f(x^t), y^t)] - \sqrt{ \frac{1}{2t} \log \left(\frac{|\mathcal{F}|}{\delta}\right) }\right) \geq 1 - \delta
+    \end{align}
+
+    In particular this implies that
+
+    \begin{align}
+      \mathbb{P}\left(\mathbb{E}_{(x^t, y^t)}[l(\hat{f}^{t}(x^t), y^t)] \leq \frac{1}{n} \sum_{i=1}^{t-1} l(\hat{f}^{t}(x^{i}), y^i) + \sqrt{ \frac{1}{2t} \log \left(\frac{|\mathcal{F}|}{\delta}\right) }\right) \geq 1 - \delta
+    \end{align}
+
+    and thus
+
+    \begin{align}
+      \mathbb{E}[l(\hat{f}^t(x^t), y^t)] \leq \delta + (1 - \delta) \left(\frac{1}{n} \mathbb{E}\left[\sum_{i=1}^{t-1}l(\hat{f}^{t}(x^i), y^i)\right] + \sqrt{ \frac{1}{2t} \log \left(\frac{|\mathcal{F}|}{\delta}\right) }\right)
+    \end{align}
+    
+    <span style="color: blue;">
+    One can how that for any \(t_1 > t_2\), we must have (probably true but still working on a proof lmao)
+
+    \begin{align}
+      \mathbb{E}\left[\frac{1}{t_1}\sum_{i=1}^{t_1}l(\hat{f}^{t_1+1}(x^i), y^i)\right] \geq \mathbb{E}\left[\frac{1}{t_2}\sum_{i=1}^{t_2}l(\hat{f}^{t_2+1}(x^i), y^i)\right]
+    \end{align}
+
+    </span>
+        
+    hence since \(\sum_{i=1}^{n} \frac{1}{\sqrt{i}} \leq \sum_{i=1}^{n} 2 (\sqrt{i} - \sqrt{i-1}) \leq 2\sqrt{n}\) 
+
+    \begin{align}
+      \mathbb{E}\left[\sum_{t=1}^{T}l(\hat{f}^{t}(x^t), y^t)\right] \leq T\delta + (1-\delta)\left(\sqrt{2T\log(|\mathcal{F}| / \delta)} + \mathbb{E}\left[\min_{f \in \mathcal{F}} \sum_{i=1}^{T} l(f(x^t), y^t)\right]\right)
+    \end{align}
+
+    Setting \(\delta = \frac{1}{T}\) we get
+
+    \begin{align}
+      \mathbb{E}\left[\sum_{t=1}^{T}l(\hat{f}^{t}(x^t), y^t)\right] - \mathbb{E}\left[\min_{f \in \mathcal{F}} \sum_{i=1}^{T} l(f(x^t), y^t)\right] \leq c\sqrt{T\log(T \cdot |\mathcal{F}|)} 
+    \end{align}
+
+    This is not the \(\Omega (T \log |\mathcal{F}|)\) bound we were looking for. Hopefully I'll be able to actually finish this problem and prove the problem statement.
+    <br><br>
+    <span style="color: blue">
+    The theme of the problem in general is to show that \(\mathbb{E}[l(f^{t}(x), y)] - \mathbb{E}[l^*(f^{t}(x), y)]\) can not be non-neglegible, otherwise \(f^{t}\) can not be the minimum over \((x, y)[:t]\) by LLN.
+    There could be a possible solution using the potential function given in the book. The given potential function is nice because it essentially computes a soft minimum over \(f\) without any
+    actual min operator and thus easy to work expectaions with. One final idea I have is to assume the existance of
+    
+    \begin{equation}
+      f^* = \arg\min_{f \in \mathcal{F}} \mathbb{E}_{x, y \sim p_{x,y}}[l(f(x), y)]
+    \end{equation}
+
+    and bound errors in terms of this function. This function is in some sense the best asymptotic loss achieveable by any \(f \in \mathcal{F}\). Until then, adieu!
+    </span>
+
+    <br><br><a href="/">Return home</a>
+  </div>
+</body>
+</html>
