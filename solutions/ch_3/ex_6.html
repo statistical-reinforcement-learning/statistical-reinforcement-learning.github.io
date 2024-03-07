@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 6 • Statistical Reinforcement Learning</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/stylesheets/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Chapter 3 • Exercise 6</h1>
+    <strong>Part 1</strong><br><br>
+    We have similar to proof of proposition 1 that
+    \begin{align}
+        \mathrm{Reg} &= \sum_{t=1}^{T} \mathbb{E}_{\pi^t \sim p^t} \left[f^\star(x^t, \pi^\star(x^t)) - f^\star(x^t, \pi^t)\right] \\
+        &\leq \sum_{t=1}^{T} f^\star(x^t, \pi^\star(x^t)) - f^\star(x^t, \pi^t) + \epsilon T \\
+    \end{align}
+    and
+    \begin{align}
+        f^\star(x^t, \pi^\star(x^t)) - f^\star(x^t, \pi^t) &\leq \sum_{\pi \in \{\pi^\star(x^t), \pi^t\}}|f^\star(x^t, \pi^\star(x^t)) - \hat{f}(x^t, \pi^*(x^t))| \\
+        &\leq \sum_{\pi \in \{\pi^\star(x^t), \pi^t\}} \frac{1}{\sqrt{p^t(\pi)}} \sqrt{p^t(\pi)}|f^\star(x^t, \pi^\star(x^t)) - \hat{f}(x^t, \pi^*(x^t))| \\
+        &\leq \sqrt{\sum_{\pi \in \{\pi^\star(x^t), \pi^t\}} \frac{1}{p^t(\pi)}} \cdot \sqrt{\mathbb{E}_{\pi \sim p(\cdot)}\left[\left(f^\star(x^t, \pi) - \hat{f}(x^t, \pi)\right)^2\right]} \\
+        &\leq \sqrt{\frac{2A}{\epsilon}} \cdot \sqrt{\mathbb{E}_{\pi \sim p(\cdot)}\left[\left(f^\star(x^t, \pi) - \hat{f}(x^t, \pi)\right)^2\right]}
+    \end{align}
+    Now since \(\hat{f}\) is returned by the oracle, we have a bound on its error. With probability at least \(1 - \delta\), we must have for \(2^{m} \leq t \leq 2^{m+1}\) that
+    \begin{align}
+        \mathbb{E}_{\pi \sim p(\cdot)}\left[\left(f^\star(x^t, \pi) - \hat{f}(x^t, \pi)\right)^2\right] \leq \frac{1}{2^{m-1}}\mathrm{Est}_{\mathrm{Sq}}^{\mathrm{off}}(\mathcal{F}, 2^{m-1}, \delta)
+    \end{align}
+    Hence if we set \(\delta = \delta / m^2\), then with probability at least \(1 - \delta\) for all \(m > 1\), we have
+    \begin{align}
+        \mathbb{E}_{\pi \sim p(\cdot)}\left[\left(f^\star(x^t, \pi) - \hat{f}(x^t, \pi)\right)^2\right] \leq \frac{1}{2^{m-1}} \mathrm{Est}_{\mathrm{Sq}}^{\mathrm{off}}(\mathcal{F}, 2^{m-1}, \frac{\delta}{m^2})
+    \end{align}
+    This follows from a union bound and the fact that \(\sum_{m=2}^{\log{T}} \frac{\delta}{m^2} \leq \delta \left(\frac{\pi^2}{6} - 1\right) \leq \delta\). Hence summing equation (6) over all \(T\) we have
+    \begin{align}
+        \mathrm{Reg} &\leq \sqrt{\frac{2A}{\epsilon}} \sum_{m=1}^{\log{T}} \sum_{t=2^{m}}^{2^{m+1}}\sqrt{\frac{1}{2^{m-1}} \mathrm{Est}_{\mathrm{Sq}}^{\mathrm{off}}(\mathcal{F}, 2^{m-1}, \frac{\delta}{m^2})} + \epsilon T \\
+        &\leq \sqrt{\frac{2A}{\epsilon}} \sum_{m=1}^{\log T} \sqrt{2^{m+1} \mathrm{Est}_{\mathrm{Sq}}^{\mathrm{off}}(\mathcal{F}, 2^{m-1}, \frac{\delta}{m^2})} + \epsilon T
+    \end{align}
+    By AM-GM, for suitable \(\epsilon\), the minimum value of \(\frac{A}{\sqrt{\epsilon}} + B \epsilon \geq 3 \left(\frac{A^2B}{4}\right)\) becomes
+    \begin{align}
+        \mathrm{Reg} &\lesssim A^{\frac{1}{3}} T^{\frac{1}{3}} \left(\sum_{m=1}^{\log{T}}2^{m/2} \mathrm{Est}_{\mathrm{Sq}}^{\mathrm{off}}\left(\mathcal{F}, 2^{m-1}, \frac{\delta}{m^2}\right)^{\frac{1}{2}} \right)^{\frac{2}{3}}
+    \end{align}
+    as desired.
+    <br><br>
+    <br><br>
+    <strong>Part 2</strong>
+    We have
+    \begin{align}
+        \mathrm{Est}_{\mathrm{Sq}}^{\mathrm{off}} \left(\mathcal{F}, 2^{m-1}, \frac{\delta}{m^2}\right) &= \log \left(\frac{|\mathcal{F}| m^2}{\delta}\right) \\
+        &\leq \log \left(\frac{|\mathcal{F}| (\log T)^2}{\delta}\right) \\
+    \end{align}
+    Hence the bound reduces to
+    \begin{align}
+        \mathrm{Reg} &\lesssim A^{\frac{1}{3}} T^{\frac{2}{3}} \left(\log\left(\frac{|\mathcal{F}| (\log T)^2}{\delta}\right)\right)^{\frac{1}{3}} \\
+        &\lesssim A^{1/3} T^{2/3} \left(\log \frac{|\mathcal{F}|}{\delta}\right)^{1 / 3} 
+    \end{align}
+    up to logarithmic factors as desired.
+    <br><br><a href="/">Return home</a>
+  </div>
+</body>
+</html>
