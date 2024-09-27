@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise 5 • Statistical Reinforcement Learning</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/assets/stylesheets/style.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Chapter 3 • Exercise 5</h1>
+We have the following results:
+<br><br>
+<strong>Lemma 1:</strong> With probability \(1 - \delta\), for any \(t \in [T]\), any \(x \in \mathcal{X}\) and any \(\pi \in \Pi\), we have
+\begin{align}
+|\hat{f}^t(x, \pi) - f^\star(x, \pi)| \leq \sqrt{\frac{2 \log (2T^2 A |\mathcal{X}|/ \delta)}{n^t(x, \pi)}}
+\end{align}
+<br>
+<em>Proof:</em> This follows from just applying union bound to hoeffding's inequalities over all \(x \in \mathcal{X}\) and \(\pi \in \Pi\).
+<br><br>
+<strong>Lemma 2:</strong> 
+\begin{align}
+\sum_{i=1}^{T} \frac{1}{\sqrt{n^t(x^t, \pi^t)}} \land 1 \lesssim \sqrt{A|\mathcal{X}|T}
+\end{align}
+<br>
+<em>Proof:</em> This is just the confidence width potential lemma applied to \(\mathcal{X} \times [A]\) instead of \([A]\).
+<br><br>
+Coming back to main proof, we just combine both lemmas and lemma 7 from the book to get
+\begin{align}
+\sum_{i=1}^T f^\star(x^T, \pi^\star(x^t)) - f^\star(\pi^t) &\leq \sum_{x \in \mathcal{X}} \sum_{i = 1}^T \left( f^\star(x, \pi^\star(x^t)) - f^\star(x, \pi^t) \right) \bm{1}_{x^t = x} \\
+&\leq \sum_{x \in \mathcal{X}} \sum_{t=1}^{T} \left(\bar{f}^t(x, \pi^t) - \underline{f}^t(x, \pi^t)\right) \bm{1}_{x^t = x} \\
+&\leq \sum_{x \in \mathcal{X}} \sum_{t=1}^{T} \bm{1}_{x^t = x} \cdot 2 \sqrt{\frac{2 \log (2T^2 A |\mathcal{X}|/ \delta)}{n^t(x^t, \pi^t)}} \land 1 \\
+&\lesssim \sqrt{|A| \mathcal{X} T \log (T^2 A / \delta)}
+\end{align}
+as desired.
+    <br><br><a href="/">Return home</a>
+  </div>
+</body>
+</html>
