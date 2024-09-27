@@ -2,8 +2,11 @@ import fnmatch
 import os
 from pathlib import Path
 import shutil
-import markdown
 from jinja2 import Environment, FileSystemLoader
+import frontmatter
+import mistune
+
+markdown = mistune.create_markdown(plugins=["math"])
 
 SRC_PATH = Path("src/")
 DST_PATH = Path("site/")
@@ -12,18 +15,17 @@ SOLUTIONS_FOLDER = SRC_PATH / "solutions"
 STATIC_FOLDER = SRC_PATH / "assets"
 TEMPLATES_FOLDER = SRC_PATH / "templates"
 
-SOLUTION_TEMPLATE = "solutions.html"
+SOLUTION_TEMPLATE = "solution.html"
 
 ALLOWED = ["*.html", "favicon.ico", "static/*"]
 
-environment = Environment(TEMPLATES_FOLDER)
+environment = Environment(loader=FileSystemLoader(TEMPLATES_FOLDER))
 
 def render_html(content: str):
     """Render."""
     template = environment.get_template(SOLUTION_TEMPLATE)
-
-    html_content = markdown.markdown(content)
-    rendered_html = template.render(content=html_content)
+    metadata, content = frontmatter.parse(content)
+    rendered_html = template.render(metadata, content=content)
     return rendered_html
 
 def build_file(file: Path):
@@ -47,16 +49,17 @@ def build_file(file: Path):
         shutil.copyfile(file, dst_file)
         return
     
-    if any(fnmatch.fnmatch(str(file), allowed) for allowed in ALLOWED):
-        shutil.copyfile(file, dst_file)
-        return
-    
     if file.is_relative_to(SOLUTIONS_FOLDER):
         with open(file) as f:
             file_content = f.read()
         dst_content = render_html(file_content)
-        with open(dst_file, "w") as f:
+        with open(dst_file.with_suffix(".html"), "w") as f:
             f.write(dst_content)
+        return
+
+    if any(fnmatch.fnmatch(str(file), allowed) for allowed in ALLOWED):
+        shutil.copyfile(file, dst_file)
+        return
 
 def build():
     """Build."""

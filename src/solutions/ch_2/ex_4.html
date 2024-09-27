@@ -1,71 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exercise 4 • Statistical Reinforcement Learning</title>
+---
+exercise: 4
+---
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="/assets/stylesheets/style.css">
-
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
-      onload="renderMathInElement(document.body);"></script>
-</head>
-<body>
-  <div class="container">
-    <h1>Chapter 2 • Exercise 4</h1>
-    <h3>Part 1</h3>
-    This just follows from
-    \begin{align}
-        \mathbb{E}_{\pi^t \sim p^t} \left[\tilde{\bm{l}}^t(\pi' \mid \pi^t)\right] &= \sum_{\pi^t \in [A]} p^t(\pi^t) \cdot \frac{\bm{l}^{t}(\pi')}{p^t(\pi')} \cdot \bm{1}\{\pi^t = \pi'\} = \bm{l}^{t}(\pi')
-    \end{align}
-    Let \(q: [A] \to \mathbb{R}\) be any probability distribution over \([A]\). Then since both expectation and inner product are linear, we must have
-    \begin{align}
-    \langle q, \bm{l}^t\rangle = \left\langle q,  \mathbb{E}_{\pi^{t} \sim p^t} \tilde{\bm{l}}^t\right\rangle = \mathbb{E}_{\pi^{t} \sim p^t} \left\langle q, \tilde{\bm{l}}^t\right\rangle
-    \end{align}
-    and hence
-    \begin{align}
-        \mathbb{E}[\textbf{Reg}] = \mathbb{E} \left[\sum_{t=1}^T \mathbb{E}_{\pi^t \sim p^t} \left\langle p^t, \tilde{\bm{l}}^t\right\rangle\right] - \mathbb{E} \left[\sum_{t=1}^T \mathbb{E}_{\pi^t \sim p^t} \left\langle e_{\pi}, \tilde{\bm{l}}^t\right\rangle\right]
-    \end{align}
-    as desired.
-    <br><br>
-    <h3>Part 2</h3>
-    We must have
-    \begin{align}
-        \mathbb{E}_{\pi \sim p^t} \left[\tilde{\bm{l}}^t(\pi\mid \pi')^2\right] = \sum_{\pi \in [A]} p^t{\pi} \cdot \left(\frac{\bm{l}^t(\pi)}{p^t({\pi})}\right)^2 \bm{1}\{\pi = \pi'\} = \frac{\bm{l}^t(\pi)^2}{p^t(\pi)}
-    \end{align}
-    Therefore
-    \begin{align}
-        \mathbb{E}_{\pi^t \sim p^t}\left[\mathbb{E}_{\pi \sim p^t}\left[\tilde{\bm{l}}^t(\pi \mid \pi^t)^2\right]\right] &= \mathbb{E}_{\pi^t \sim p^t}\left[ \frac{\bm{l}^t(\pi^t)^2}{p^t(\pi^t)} \right] \\
-        &= \sum_{\pi^t \in [A]} p^t(\pi^t) \frac{\bm{l}^t(\pi^t)^2}{p^t(\pi^t)} \\
-        &\leq A
-    \end{align}
-    since \(\bm{l}^t \in [0, 1]\)
-    <br><br>
-    <h3>Part 3</h3>
-    We reduce this to the Low Noise EWA setup. Choose any \(\pi' = \pi'_1, \pi'_2, \ldots \pi'_t \in \mathbb{\Pi}\). Consider the sequence \((x_t, y_t) = (t, \pi'_t)\). Consider the family \(\mathcal{F}: \{1, \ldots, T\} \to \Pi\) which returns the same policy for all its inputs. Finally
-    consider the loss \( \Pi \times \Pi \times l' : \{1, \ldots, T\} \) (augmentation of \(t\) can be done by including it in \(y\)) defined by
-    \begin{align}
-        l'(f(t), \pi'_t) = \tilde{\bm{l}}^t(\pi'_t \mid f(t)) \quad i,j \in [A]
-    \end{align}
-    Then by the low noise EWA result, we have that the given construction of \(p^t\) satisfies (\(f^t\) becomes \(\pi^t\) since \(\mathcal{F}\) is set of constant functions)
-    \begin{align}
-        \sum_{i=1}^{T} \mathbb{E}_{\pi^t \sim p^t} \left[\tilde{\bm{l}}^t(\pi'_t \mid \pi^t)\right] - \tilde{\bm{l}}^t(\pi'_t \mid \pi^\star) \leq \frac{\eta A}{2} + \frac{\log A}{\eta} \leq \sqrt{2 A T \log A}
-    \end{align}
-    for all \(\pi^\star\). Note here we have used result in part 2, as well as fact that \(|\mathcal{F}| = A\).
-    <br> <br>
-    Since this statement is true for all \(\pi' \in \Pi^T\), we can do an expectation over all \(\pi'\) to get
-    \begin{align}
-        \mathbb{E}\left[\sum_{i=1}^{T} \mathbb{E}_{\pi^t \sim p^t} \left\langle p^t, \tilde{\bm{l}}^t\right\rangle\right] - \mathbb{E}\left[\sum_{i=1}^T\mathbb{E}_{\pi^t \sim p^t} \left\langle e_{\pi^{\star}}, \tilde{\bm{l}}^t\right\rangle\right] \leq \sqrt{2 A T \log A}
-    \end{align}
-    for all \(\pi^{\star}\) as desired
-
-    <br><br><a href="/">Return home</a>
-  </div>
-</body>
-</html>
+<h1>Chapter 2 • Exercise 4</h1>
+<h3>Part 1</h3>
+This just follows from
+\begin{align}
+    \mathbb{E}_{\pi^t \sim p^t} \left[\tilde{\bm{l}}^t(\pi' \mid \pi^t)\right] &= \sum_{\pi^t \in [A]} p^t(\pi^t) \cdot \frac{\bm{l}^{t}(\pi')}{p^t(\pi')} \cdot \bm{1}\{\pi^t = \pi'\} = \bm{l}^{t}(\pi')
+\end{align}
+Let \(q: [A] \to \mathbb{R}\) be any probability distribution over \([A]\). Then since both expectation and inner product are linear, we must have
+\begin{align}
+\langle q, \bm{l}^t\rangle = \left\langle q,  \mathbb{E}_{\pi^{t} \sim p^t} \tilde{\bm{l}}^t\right\rangle = \mathbb{E}_{\pi^{t} \sim p^t} \left\langle q, \tilde{\bm{l}}^t\right\rangle
+\end{align}
+and hence
+\begin{align}
+    \mathbb{E}[\textbf{Reg}] = \mathbb{E} \left[\sum_{t=1}^T \mathbb{E}_{\pi^t \sim p^t} \left\langle p^t, \tilde{\bm{l}}^t\right\rangle\right] - \mathbb{E} \left[\sum_{t=1}^T \mathbb{E}_{\pi^t \sim p^t} \left\langle e_{\pi}, \tilde{\bm{l}}^t\right\rangle\right]
+\end{align}
+as desired.
+<br><br>
+<h3>Part 2</h3>
+We must have
+\begin{align}
+    \mathbb{E}_{\pi \sim p^t} \left[\tilde{\bm{l}}^t(\pi\mid \pi')^2\right] = \sum_{\pi \in [A]} p^t{\pi} \cdot \left(\frac{\bm{l}^t(\pi)}{p^t({\pi})}\right)^2 \bm{1}\{\pi = \pi'\} = \frac{\bm{l}^t(\pi)^2}{p^t(\pi)}
+\end{align}
+Therefore
+\begin{align}
+    \mathbb{E}_{\pi^t \sim p^t}\left[\mathbb{E}_{\pi \sim p^t}\left[\tilde{\bm{l}}^t(\pi \mid \pi^t)^2\right]\right] &= \mathbb{E}_{\pi^t \sim p^t}\left[ \frac{\bm{l}^t(\pi^t)^2}{p^t(\pi^t)} \right] \\
+    &= \sum_{\pi^t \in [A]} p^t(\pi^t) \frac{\bm{l}^t(\pi^t)^2}{p^t(\pi^t)} \\
+    &\leq A
+\end{align}
+since \(\bm{l}^t \in [0, 1]\)
+<br><br>
+<h3>Part 3</h3>
+We reduce this to the Low Noise EWA setup. Choose any \(\pi' = \pi'_1, \pi'_2, \ldots \pi'_t \in \mathbb{\Pi}\). Consider the sequence \((x_t, y_t) = (t, \pi'_t)\). Consider the family \(\mathcal{F}: \{1, \ldots, T\} \to \Pi\) which returns the same policy for all its inputs. Finally
+consider the loss \( \Pi \times \Pi \times l' : \{1, \ldots, T\} \) (augmentation of \(t\) can be done by including it in \(y\)) defined by
+\begin{align}
+    l'(f(t), \pi'_t) = \tilde{\bm{l}}^t(\pi'_t \mid f(t)) \quad i,j \in [A]
+\end{align}
+Then by the low noise EWA result, we have that the given construction of \(p^t\) satisfies (\(f^t\) becomes \(\pi^t\) since \(\mathcal{F}\) is set of constant functions)
+\begin{align}
+    \sum_{i=1}^{T} \mathbb{E}_{\pi^t \sim p^t} \left[\tilde{\bm{l}}^t(\pi'_t \mid \pi^t)\right] - \tilde{\bm{l}}^t(\pi'_t \mid \pi^\star) \leq \frac{\eta A}{2} + \frac{\log A}{\eta} \leq \sqrt{2 A T \log A}
+\end{align}
+for all \(\pi^\star\). Note here we have used result in part 2, as well as fact that \(|\mathcal{F}| = A\).
+<br> <br>
+Since this statement is true for all \(\pi' \in \Pi^T\), we can do an expectation over all \(\pi'\) to get
+\begin{align}
+    \mathbb{E}\left[\sum_{i=1}^{T} \mathbb{E}_{\pi^t \sim p^t} \left\langle p^t, \tilde{\bm{l}}^t\right\rangle\right] - \mathbb{E}\left[\sum_{i=1}^T\mathbb{E}_{\pi^t \sim p^t} \left\langle e_{\pi^{\star}}, \tilde{\bm{l}}^t\right\rangle\right] \leq \sqrt{2 A T \log A}
+\end{align}
+for all \(\pi^{\star}\) as desired

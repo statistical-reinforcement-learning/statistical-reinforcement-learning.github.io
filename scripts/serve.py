@@ -13,13 +13,15 @@ class BuildEventHanlder(FileSystemEventHandler):
 
     def on_modified(self, event):
         """On file modification."""
-        print(f"File changed: {event.src_path}, rebuilding...")
-        build.build_file(Path(event.src_path))
+        src_path = Path(event.src_path).relative_to(Path.cwd())
+        print(f"File changed: {src_path}, rebuilding...")
+        build.build_file(src_path)
 
     def on_created(self, event):
         """On file creation."""
-        print(f"File created: {event.src_path}, rebuilding...")
-        build.build_file(Path(event.src_path))
+        src_path = Path(event.src_path).relative_to(Path.cwd())
+        print(f"File created: {src_path}, rebuilding...")
+        build.build_file(src_path)
 
 def start_http_server(directory: Path, port: int = 8000):
     """Start a simple HTTP server."""
@@ -44,6 +46,7 @@ def serve():
     event_handler = BuildEventHanlder()
     observer = Observer()
     observer.schedule(event_handler, build.SRC_PATH, recursive=True)
+    observer.setDaemon(True)
     observer.start()
 
     try:
