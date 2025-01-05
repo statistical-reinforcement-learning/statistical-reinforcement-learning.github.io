@@ -41,3 +41,38 @@ Hence for any \(f^{\star} \in \mathcal{F}\), we have
     \sum_{t=1}^{T} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)] - l(f^{\star}(x), y) \leq  \frac{\eta}{2} \sum_{t=1}^{T} \mathbb{E}_{\hat{f}^t \sim q^{t} }[l(\hat{f}^t(x), y)^2] + \frac{\log |\mathcal{F}|}{\eta}
 \end{align}
 as desired.
+
+<h4>Part 3</h4>
+
+Since \(l\) is bounded, we have
+
+\begin{align}
+\sum_{t=1}^{T} \mathbb{E}_{\hat{f^t} \sim q^t} [l(\hat{f^t}(x^t), y^t)] &\leq \frac{\eta}{2} \mathbb{E}_{\hat{f^t} \sim q^t} [l(\hat{f^t}(x^t), y^t)^2] + \frac{\log |\mathcal{F}|}{\eta} \\
+&\leq  \frac{\eta}{2} \mathbb{E}_{\hat{f^t} \sim q^t} [l(\hat{f^t}(x^t), y^t)] + \frac{\log |\mathcal{F}|}{\eta} 
+\end{align}
+
+rearranging, we have
+
+\begin{align}
+\sum_{t=1}^{T} \mathbb{E}_{\hat{f^t} \sim q^t} [l(\hat{f^t}(x^t), y^t)] &\leq \frac{\log |\mathcal{F}|}{\eta(1 - \frac{\eta}{2})} 
+\end{align}
+
+choosing \(\eta = 1\), we have
+
+\begin{align}
+\sum_{t=1}^{T} \mathbb{E}_{\hat{f^t} \sim q^t} [l(\hat{f^t}(x^t), y^t)] &\leq 2 \log |\mathcal{F}|
+\end{align}
+
+<h4>Part 4</h4>
+
+Note that whenever \(l(\hat{f}^t(x^t), y^t) = 1\), \(|\mathcal{F}^{t}| \leq \frac{1}{2}|\mathcal{F}^{t-1}|\) (ie, whenever the majority is wrong, the size of our version space goes down by a factor of two). Thus we have that
+
+\begin{align}
+|\mathcal{F}^{t}| \leq \frac{|\mathcal{F}|}{\exp \left\{\ln 2 \times \sum l(\hat{f}^t(x^t), y^t)\right\}}
+\end{align}
+
+hence for all \(t\)
+
+\begin{align}
+\sum_{t=0}^{T} l(\hat{f}^t(x^t), y^t) \leq \frac{1}{\ln 2} \log \frac{|\mathcal{F}|}{|\mathcal{F}^{T}|} \leq \frac{1}{\ln 2} \log {|\mathcal{F}|}
+\end{align}
