@@ -27,16 +27,21 @@ Here we use the fact that all \(f(x), f^*(x), y \in [0, 1]\)
 
 We apply Bernstein's inequality on \(-Z_i\). Note that \(|\mathbb{E}[Z_i] - Z_i| \leq 1\). Hence with probability at least \(1-\delta\), we have
 \begin{align}
-\frac{1}{T} \sum_{i=1}^T \left(\mathbb{E}[Z_i] - Z_i\right) &\leq \sigma^2 \sqrt{\frac{2 \log {1 / \delta}}{T}} + \frac{\log{1 / \delta}}{3T} \\
-&\leq \frac{\sigma^2}{8} + \frac{4\log(1 / \delta)}{T} + \frac{\log 1/\delta}{3T} \\
-&= \frac{1}{2} \mathcal{E} + \frac{13}{3} \frac{\log(1 / \delta)}{T}
+\frac{1}{T} \sum_{i=1}^T \left(\mathbb{E}[Z_i] - Z_i\right) &\leq  \sqrt{\frac{2 \mathbb{V}[Z_i] \log {1 / \delta}}{T}} + \frac{\log{1 / \delta}}{3T} \\
 \end{align}
 
-Note here we used AM_GM in step 2. Finally, since \(\frac{1}{T} \sum_{i=1}^{T} Z_i = L(f) - L(f^*)\), we have that with probability at least \((1 - \delta)\)
+Since \(\mathbb{E}[Z_i] = \mathcal{E}(f)\) and \(\mathbb{V}[Z_i] \leq 4 \mathcal{E}(f)\), we have
 
 \begin{align}
-\mathcal{E} - (L(f) - L(f^*)) \leq \frac{1}{2} \mathcal{E} + \frac{13}{3}\frac{\log(1/\delta)}{T} \\
-\mathcal{E} \leq 2(L(f) - L(f^*)) + C\frac{\log(1 / \delta)}{T}
+\mathcal{E}(f) - \left(\hat{L}(f) - \hat{L}(f^\star)\right) &\leq \sqrt{\frac{8 \mathcal{E}(f) \log {1 / \delta}}{T}} + \frac{\log{1 / \delta}}{3T} \\
+&\leq \frac{\mathcal{E}(f)}{2} + \frac{4 \log {1 / \delta}}{T} + \frac{\log{1 / \delta}}{3T}\\
+&= \frac{1}{2} \mathcal{E}(f) + \frac{13}{3} \frac{\log(1 / \delta)}{T}
+\end{align}
+
+Note here we used AM_GM in step 2 and that \(\frac{1}{T} \sum_{i=1}^{T} Z_i = \hat{L}(f) - \hat{L}(f^*)\). Rearranging, we have that with probability at least \((1 - \delta)\)
+
+\begin{align}
+\mathcal{E}(f) &\leq 2(\hat{L}(f) - \hat{L}(f^*)) + C\frac{\log(1 / \delta)}{T}
 \end{align}
 
 where \(C = 26/3\).
@@ -55,7 +60,7 @@ Setting \(\delta = \delta / |\mathcal{F}|\), we have that with probability at le
 \forall f \in \mathcal{F}, \ \mathcal{E}(f) \leq 2 (\hat{L}(f) - \hat{L}(f^*)) + \frac{C \log (|\mathcal{F}| / \delta)}{T}
 \end{align}
 
-In particular, we must have that with probability at least \(1 - \delta\):
+For \(f = \hat{f}\), since \(\hat{L}(\hat{f}) \leq \hat{L}(f^*)\), we must have that with probability at least \(1 - \delta\):
 
 \begin{align}
 \mathcal{E}(\hat{f}) \leq \frac{C \log (|\mathcal{F}| / \delta)}{T}
